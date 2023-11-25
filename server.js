@@ -1,36 +1,41 @@
 const express = require("express");
-const app = express();
-
-require("dotenv").config();
-const dbConfig = require("./config/dbConfig");
-app.use(express.json());
-const userRoute = require("./routes/userRoute");
-const adminRoute = require("./routes/adminRoute");
-const doctorRoute = require("./routes/doctorsRoute");
+const colors = require("colors");
+const moragan = require("morgan");
+const dotenv = require("dotenv");
+const connectDB = require("./config/db");
 const path = require("path");
 
+//dotenv conig
+dotenv.config();
 
+//mongodb connection
+connectDB();
 
-app.use("/api/user", userRoute);
-app.use("/api/admin", adminRoute);
-app.use("/api/doctor", doctorRoute);
+//rest obejct
+const app = express();
 
-// if (process.env.NODE_ENV === "production") {
-//   app.use("/", express.static("client/build"));
+//middlewares
+app.use(express.json());
+app.use(moragan("dev"));
 
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(__dirname, "client/build/index.html"));
-//   });
-// }
+//routes
+app.use("/api/v1/user", require("./routes/userRoutes"));
+app.use("/api/v1/admin", require("./routes/adminRoutes"));
+app.use("/api/v1/doctor", require("./routes/doctorRoutes"));
 
 //static files
-app.use(express.static(path.join(__dirname,"./client/build")));
+app.use(express.static(path.join(__dirname, "./client/build")));
 
 app.get("*", function (req, res) {
-      res.sendFile(path.join(__dirname, "./client/build/index.html"));
-    });
+  res.sendFile(path.join(__dirname, "./client/build/index.html"));
+});
 
-const port = process.env.PORT || 5000;
-
-app.get("/", (req, res) => res.send("Hello World!"));
-app.listen(port, () => console.log(`Node Express Server Started at ${port}!`));
+//port
+const port = process.env.PORT || 8080;
+//listen port
+app.listen(port, () => {
+  console.log(
+    `Server Running in ${process.env.NODE_MODE} Mode on port ${process.env.PORT}`
+      .bgCyan.white
+  );
+});

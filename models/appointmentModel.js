@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const appointmentSchema = new mongoose.Schema(
   {
     userId: {
@@ -10,18 +11,14 @@ const appointmentSchema = new mongoose.Schema(
       required: true,
     },
     doctorInfo: {
-      type: Object,
-      required: true,
-    },
-    userInfo: {
-      type: Object,
-      required: true,
-    },
-    date: {
       type: String,
       required: true,
     },
-    time: {
+    userInfo: {
+      type: String,
+      required: true,
+    },
+    date: {
       type: String,
       required: true,
     },
@@ -30,11 +27,14 @@ const appointmentSchema = new mongoose.Schema(
       required: true,
       default: "pending",
     },
+    time: {
+      type: String,
+      required: true,
+    },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-const appointmentModel = mongoose.model("appointmenst", appointmentSchema);
+const appointmentModel = mongoose.model("appointments", appointmentSchema);
+
 module.exports = appointmentModel;
